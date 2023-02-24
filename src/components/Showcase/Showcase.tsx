@@ -12,10 +12,15 @@ const Showcase = () => {
 
   const { data } = useSession();
 
-  const { data: topics, refetch } = api.topic.getAll.useQuery(undefined, {
+  const {
+    data: topics,
+    refetch,
+    isLoading,
+  } = api.topic.getAll.useQuery(undefined, {
     enabled: data?.user !== undefined,
     onSuccess: () => {
       void refetch();
+      
     },
   });
 
@@ -30,18 +35,23 @@ const Showcase = () => {
       <Header />
       <main className="flex items-center gap-10 border-t border-slate-400/40 pt-4">
         <aside className="w-96 border-r-2 border-slate-200/10 pr-2">
-          <div className="flex flex-col items-start">
-            {topics?.map(({ topic, id }) => (
-              <button
-                onClick={() => setSelectedTopicId(id)}
-                type="button"
-                key={`topic-${id}`}
-                className="mb-2 w-full rounded-lg py-2 transition-all duration-200 ease-out last:mb-0 hover:bg-gray-300/25"
-              >
-                {topic}
-              </button>
-            ))}
-          </div>
+          {isLoading ? (
+            "loading"
+          ) : (
+            <div className="flex flex-col items-start">
+              {topics?.map(({ topic, id }) => (
+                <button
+                  onClick={() => setSelectedTopicId(id)}
+                  type="button"
+                  key={`topic-${id}`}
+                  className="mb-2 w-full rounded-lg py-2 transition-all duration-200 ease-out last:mb-0 hover:bg-gray-300/25"
+                >
+                  {topic}
+                </button>
+              ))}
+            </div>
+          )}
+
           <div className="mt-3 flex items-center gap-4">
             <input
               value={topic}
