@@ -1,3 +1,5 @@
+import { api } from "(-/)/utils/api";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 // Components
@@ -5,12 +7,34 @@ import Header from "../Header/Header";
 
 const Showcase = () => {
   const [topic, setTopic] = useState<string>("");
+
+  const { data } = useSession();
+
+  const createTopic = api.topic.create.useMutation();
+
+  const { data: topics, refetch } = api.topic.getAll.useQuery(undefined, {
+    enabled: data?.user !== undefined,
+    onSuccess: () => {
+      void refetch();
+    },
+  });
+
   return (
     <section className="px-6 text-slate-50">
       <Header />
       <main className="flex items-center gap-10 border-t border-slate-400/40 pt-4">
-        <aside className="w-96 border-r-2 border-slate-200/10 ">
-          <div>array of notes</div>
+        <aside className="w-96 border-r-2 border-slate-200/10 pr-2">
+          <div className="flex flex-col items-start">
+            {topics?.map(({ topic, id }) => (
+              <button
+                type="button"
+                key={`topic-${id}`}
+                className="mb-2 w-full rounded-lg py-2 transition-all duration-200 ease-out last:mb-0 hover:bg-gray-300/25"
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
           <div className="mt-3 flex items-center gap-4">
             <input
               value={topic}
@@ -19,7 +43,14 @@ const Showcase = () => {
               className="rounded-lg p-2 text-base font-medium text-slate-700 outline-none focus:outline-none"
               placeholder="add notes..."
             />
-            <button type="button" className="rounded-lg bg-primary px-4 py-2">
+            <button
+              type="button"
+              className="rounded-lg bg-primary px-4 py-2"
+              onClick={() => {
+                createTopic.mutate({ topic });
+                setTopic("");
+              }}
+            >
               Add
             </button>
           </div>
