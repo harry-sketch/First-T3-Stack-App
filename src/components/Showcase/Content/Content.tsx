@@ -1,11 +1,12 @@
 import React from "react";
+import type { Topic } from "../Showcase";
 
 interface Props {
-  selectedTopicId: string | null;
+  selectedTopic: Topic | null;
 }
 
-const Content: React.FC<Props> = ({ selectedTopicId }) => {
-  return <section>{selectedTopicId}</section>;
+const Content: React.FC<Props> = ({ selectedTopic }) => {
+  return <section>{selectedTopic?.topic}</section>;
 };
 
 export default React.memo(Content);

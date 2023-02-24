@@ -1,14 +1,17 @@
-import { api } from "(-/)/utils/api";
+import { api, type RouterOutputs } from "(-/)/utils/api";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 // Components
 import Header from "../Header/Header";
 import Content from "./Content/Content";
+import Topic from "./Topic/Topic";
+
+export type Topic = RouterOutputs["topic"]["getAll"][0];
 
 const Showcase = () => {
   const [topic, setTopic] = useState<string>("");
-  const [selectedTopicId, setSelectedTopicId] = useState<null | string>(null);
+  const [selectedTopic, setSelectedTopic] = useState<null | Topic>(null);
 
   const { data } = useSession();
 
@@ -18,9 +21,9 @@ const Showcase = () => {
     isLoading,
   } = api.topic.getAll.useQuery(undefined, {
     enabled: data?.user !== undefined,
-    onSuccess: () => {
+    onSuccess: (data) => {
       void refetch();
-      
+      setSelectedTopic(selectedTopic ?? data[0] ?? null);
     },
   });
 
@@ -38,18 +41,7 @@ const Showcase = () => {
           {isLoading ? (
             "loading"
           ) : (
-            <div className="flex flex-col items-start">
-              {topics?.map(({ topic, id }) => (
-                <button
-                  onClick={() => setSelectedTopicId(id)}
-                  type="button"
-                  key={`topic-${id}`}
-                  className="mb-2 w-full rounded-lg py-2 transition-all duration-200 ease-out last:mb-0 hover:bg-gray-300/25"
-                >
-                  {topic}
-                </button>
-              ))}
-            </div>
+            <Topic topics={topics} setSelectedTopic={setSelectedTopic} />
           )}
 
           <div className="mt-3 flex items-center gap-4">
@@ -72,7 +64,7 @@ const Showcase = () => {
             </button>
           </div>
         </aside>
-        <Content selectedTopicId={selectedTopicId} />
+        <Content selectedTopic={selectedTopic} />
       </main>
     </section>
   );
