@@ -74,5 +74,15 @@ model Topic {
     topic  String
     userId String
     user   User @relation(fields: [userId],references: [id])
+    notes Note[]
+}
 
+model Note {
+    id String  @id @default(cuid())
+    topicId  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    title  String
+    desc   String
+    topic  Topic @relation(fields: [topicId],references: [id])
 }

@@ -4,16 +4,22 @@ import { useState } from "react";
 
 // Components
 import Header from "../Header/Header";
+import Content from "./Content/Content";
 
 const Showcase = () => {
   const [topic, setTopic] = useState<string>("");
+  const [selectedTopicId, setSelectedTopicId] = useState<null | string>(null);
 
   const { data } = useSession();
 
-  const createTopic = api.topic.create.useMutation();
-
   const { data: topics, refetch } = api.topic.getAll.useQuery(undefined, {
     enabled: data?.user !== undefined,
+    onSuccess: () => {
+      void refetch();
+    },
+  });
+
+  const createTopic = api.topic.create.useMutation({
     onSuccess: () => {
       void refetch();
     },
@@ -27,6 +33,7 @@ const Showcase = () => {
           <div className="flex flex-col items-start">
             {topics?.map(({ topic, id }) => (
               <button
+                onClick={() => setSelectedTopicId(id)}
                 type="button"
                 key={`topic-${id}`}
                 className="mb-2 w-full rounded-lg py-2 transition-all duration-200 ease-out last:mb-0 hover:bg-gray-300/25"
@@ -55,7 +62,7 @@ const Showcase = () => {
             </button>
           </div>
         </aside>
-        <section>notes desc</section>
+        <Content selectedTopicId={selectedTopicId} />
       </main>
     </section>
   );
