@@ -1,11 +1,15 @@
 import { type NextPage } from "next";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
-import Showcase from "../components/Showcase/Showcase";
+
+// Auth
+import { useSession } from "next-auth/react";
+
+// Components
 import SignIn from "../components/SignIn/Sigin";
+import Showcase from "../components/Showcase/Showcase";
 
 const Home: NextPage = () => {
-  const { data } = useSession();
+  const { status } = useSession();
 
   return (
     <>
@@ -15,7 +19,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen bg-bg">
-        {data?.user ? <Showcase /> : <SignIn />}
+        {status === "authenticated" ? <Showcase /> : <SignIn />}
       </main>
     </>
   );
