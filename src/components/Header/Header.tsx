@@ -1,20 +1,16 @@
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 // auth
-import { useSession, signOut } from "next-auth/react";
-import { useOnClickOutside } from "usehooks-ts";
+import { useSession } from "next-auth/react";
+import SignOut from "../Modal/Signout";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const cloeRef = useRef(null);
-
   const { data: session } = useSession();
 
   const onClose = () => setIsOpen((prev) => !prev);
-
-  useOnClickOutside(cloeRef, onClose);
 
   return (
     <nav className="flex items-center justify-between py-2.5 text-slate-50">
@@ -33,20 +29,7 @@ const Header = () => {
         ) : null}
       </div>
 
-      {isOpen ? (
-        <div
-          className="absolute right-5 top-16 w-20 rounded-lg border border-slate-900 bg-gray-800 p-2.5"
-          ref={cloeRef}
-        >
-          <button
-            type="button"
-            className="text-base font-semibold"
-            onClick={() => void signOut()}
-          >
-            SignOut
-          </button>
-        </div>
-      ) : null}
+      {isOpen ? <SignOut onClose={onClose} /> : null}
     </nav>
   );
 };
