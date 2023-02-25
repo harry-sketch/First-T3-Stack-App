@@ -11,6 +11,7 @@ import Topic from "./Topic/Topic";
 export type Topic = RouterOutputs["topic"]["getAll"][0];
 
 const Showcase = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedTopic, setSelectedTopic] = useState<null | Topic>(null);
 
   const { data } = useSession();
@@ -33,6 +34,12 @@ const Showcase = () => {
     },
   });
 
+  // Funs
+  const onSelect = (topic: Topic) => {
+    setSelectedTopic(topic);
+    setIsOpen(true);
+  };
+
   return (
     <section className="px-6 text-slate-50">
       <Header />
@@ -41,13 +48,13 @@ const Showcase = () => {
           {isLoading ? (
             "loading"
           ) : (
-            <Topic topics={topics} setSelectedTopic={setSelectedTopic} />
+            <Topic topics={topics} onSelect={onSelect} />
           )}
 
           <CreateTopic onClick={(topic) => createTopic.mutate({ topic })} />
         </aside>
 
-        <Content selectedTopic={selectedTopic} />
+        {isOpen ? <Content selectedTopic={selectedTopic} /> : null}
       </main>
     </section>
   );
