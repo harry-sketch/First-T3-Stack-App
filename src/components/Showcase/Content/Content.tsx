@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import CodeMirror from "@uiw/react-codemirror";
+import { languages } from "@codemirror/language-data";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 
 //Auth
 import { api } from "(-/)/utils/api";
@@ -39,6 +41,8 @@ const Content: React.FC<Props> = ({ selectedTopic }) => {
     },
   });
 
+  const onDelete = api.note.delete.useMutation({});
+
   const handleCreateNotes = () => {
     createNote.mutate({
       desc: notesData.desc,
@@ -53,9 +57,21 @@ const Content: React.FC<Props> = ({ selectedTopic }) => {
     <section className="w-full">
       <div>
         {notes?.map(({ title, id, desc }) => (
-          <div key={`note-${id}`} className="flex flex-col items-center">
-            <div>{title}</div>
-            <ReactMarkdown>{desc}</ReactMarkdown>
+          <div
+            key={`note-${id}`}
+            className="mb-4 flex flex-col items-start rounded-lg border border-slate-700 p-2"
+          >
+            <div className="text-xl font-bold capitalize">{title}</div>
+            <ReactMarkdown className="text-base font-medium">
+              {desc}
+            </ReactMarkdown>
+            <button
+              onClick={() => onDelete.mutate({ id })}
+              type="button"
+              className="ml-auto rounded-lg bg-red-400 px-4 py-2"
+            >
+              delete
+            </button>
           </div>
         ))}
       </div>
@@ -77,6 +93,9 @@ const Content: React.FC<Props> = ({ selectedTopic }) => {
           onChange={(value) =>
             setNotesData((prev) => ({ ...prev, desc: value }))
           }
+          extensions={[
+            markdown({ codeLanguages: languages, base: markdownLanguage }),
+          ]}
         />
         <button
           onClick={handleCreateNotes}
