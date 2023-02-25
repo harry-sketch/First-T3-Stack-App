@@ -13,7 +13,7 @@ const SignOut: React.FC<Props> = ({ name, onclose }) => {
   useOnClickOutside(closeRef, onclose);
   return (
     <div
-      className="absolute right-5 top-16 w-36 rounded-lg border border-slate-900 bg-gray-300/25 p-2.5"
+      className="absolute right-5 top-16 w-36 rounded-lg border border-slate-900 bg-gray-900 p-2.5"
       ref={closeRef}
     >
       <div className="text-xl font-bold capitalize text-slate-50">{name}</div>
