@@ -10,7 +10,9 @@ const Header = () => {
 
   const { data: session } = useSession();
 
-  const onClose = () => setIsOpen((prev) => !prev);
+  const toggle = () => setIsOpen((prev) => !prev);
+
+  const onclose = () => setIsOpen(false);
 
   return (
     <nav className="flex items-center justify-between py-2.5 text-slate-50">
@@ -24,12 +26,12 @@ const Header = () => {
             width={40}
             height={40}
             className="relative cursor-pointer rounded-full"
-            onClick={onClose}
+            onClick={toggle}
           />
         ) : null}
       </div>
 
-      {isOpen ? <SignOut onClose={onClose} /> : null}
+      {isOpen ? <SignOut name={session?.user.name} onclose={onclose} /> : null}
     </nav>
   );
 };

@@ -3,18 +3,20 @@ import { signOut } from "next-auth/react";
 import { useOnClickOutside } from "usehooks-ts";
 
 interface Props {
-  onClose: () => void;
+  name: string | null | undefined;
+  onclose: () => void;
 }
 
-const SignOut: React.FC<Props> = ({ onClose }) => {
+const SignOut: React.FC<Props> = ({ name, onclose }) => {
   const closeRef = useRef(null);
 
-  useOnClickOutside(closeRef, onClose);
+  useOnClickOutside(closeRef, onclose);
   return (
     <div
-      className="absolute right-5 top-16 w-20 rounded-lg border border-slate-900 bg-gray-300/25 p-2.5"
+      className="absolute right-5 top-16 w-36 rounded-lg border border-slate-900 bg-gray-300/25 p-2.5"
       ref={closeRef}
     >
+      <div className="text-xl font-bold capitalize text-slate-50">{name}</div>
       <button
         type="button"
         className="text-base font-semibold"
