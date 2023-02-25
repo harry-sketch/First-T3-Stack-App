@@ -1,10 +1,11 @@
 import { useState } from "react";
 
 interface Props {
+  isLoading: boolean;
   onClick: (topic: string) => void;
 }
 
-const CreateTopic = ({ onClick }: Props) => {
+const CreateTopic = ({ onClick, isLoading }: Props) => {
   const [topic, setTopic] = useState<string>("");
 
   return (
@@ -24,7 +25,7 @@ const CreateTopic = ({ onClick }: Props) => {
           setTopic("");
         }}
       >
-        Add
+        {isLoading ? "loading" : "add"}
       </button>
     </div>
   );

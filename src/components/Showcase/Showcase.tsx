@@ -39,10 +39,12 @@ const Showcase = () => {
   return (
     <section className="px-6 text-slate-50">
       <Header />
-      <main className="flex items-center gap-10 border-t border-slate-400/40 pt-4">
+      <main className="flex items-start gap-10 border-t border-slate-400/40 pt-4">
         <aside className="w-96 border-r-2 border-slate-200/10 pr-2">
-          {isLoading ? (
-            "loading"
+          {!topics?.length ? (
+            <div className="text-xl font-semibold">
+              please add topic to create notes
+            </div>
           ) : (
             <Topic
               topics={topics}
@@ -51,10 +53,17 @@ const Showcase = () => {
             />
           )}
 
-          <CreateTopic onClick={(topic) => createTopic.mutate({ topic })} />
+          <CreateTopic
+            onClick={(topic) => createTopic.mutate({ topic })}
+            isLoading={isLoading}
+          />
         </aside>
 
-        <Content selectedTopic={selectedTopic} />
+        {selectedTopic ? (
+          <Content selectedTopic={selectedTopic} />
+        ) : (
+          <div className="text-2xl font-semibold">do try;</div>
+        )}
       </main>
     </section>
   );
