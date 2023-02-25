@@ -5,12 +5,12 @@ import { useState } from "react";
 // Components
 import Header from "../Header/Header";
 import Content from "./Content/Content";
+import CreateTopic from "./CreateTopic/CreateTopic";
 import Topic from "./Topic/Topic";
 
 export type Topic = RouterOutputs["topic"]["getAll"][0];
 
 const Showcase = () => {
-  const [topic, setTopic] = useState<string>("");
   const [selectedTopic, setSelectedTopic] = useState<null | Topic>(null);
 
   const { data } = useSession();
@@ -44,26 +44,9 @@ const Showcase = () => {
             <Topic topics={topics} setSelectedTopic={setSelectedTopic} />
           )}
 
-          <div className="mt-3 flex items-center gap-4">
-            <input
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              type="text"
-              className="rounded-lg p-2 text-base font-medium text-slate-700 outline-none focus:outline-none"
-              placeholder="add notes..."
-            />
-            <button
-              type="button"
-              className="rounded-lg bg-primary px-4 py-2"
-              onClick={() => {
-                createTopic.mutate({ topic });
-                setTopic("");
-              }}
-            >
-              Add
-            </button>
-          </div>
+          <CreateTopic onClick={(topic) => createTopic.mutate({ topic })} />
         </aside>
+
         <Content selectedTopic={selectedTopic} />
       </main>
     </section>
